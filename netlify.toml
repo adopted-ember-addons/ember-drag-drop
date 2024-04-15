@@ -1,0 +1,5 @@
+[build]
+  base = "test-app/"
+  publish = "dist/"
+  command = "pnpm build"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF"
