@@ -1,7 +1,20 @@
-{{#if @enableClicking}}
-  <a href="#" {{fn this.selectForDrag}}>
+<div 
+  class="draggable-object {{if this.isDraggingObject 'is-dragging-object'}}"
+  draggable={{this.dragReady}}
+  {{did-insert this.insert}}
+  {{will-destroy this.destroy}}
+  {{on 'dragstart' this.dragStart}}
+  {{on 'dragend' this.dragEnd}}
+  {{on 'drag' this.drag}}
+  {{on 'dragover' this.dragOver}}
+  {{on 'drop' this.drop}}
+  ...attributes
+>
+  {{#if @enableClicking}}
+    <a href="#" {{fn this.selectForDrag}}>
+      {{yield}}
+    </a>
+  {{else}}
     {{yield}}
-  </a>
-{{else}}
-  {{yield}}
-{{/if}}
+  {{/if}}
+</div>

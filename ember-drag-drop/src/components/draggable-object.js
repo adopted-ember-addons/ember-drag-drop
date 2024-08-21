@@ -1,23 +1,32 @@
 /* eslint-disable ember/no-actions-hash, ember/no-classic-classes, ember/no-classic-components, ember/no-component-lifecycle-hooks, ember/no-get, ember/no-incorrect-calls-with-inline-anonymous-functions, ember/require-super-in-lifecycle-hooks, ember/require-tagless-components, import/extensions, prettier/prettier */
 import { getOwner } from '@ember/application';
-import Component from '@ember/component';
+import Component from '@glimmer/component';
 import { inject as service} from '@ember/service';
-import { alias } from '@ember/object/computed';
-import { computed } from '@ember/object';
+import { action } from '@ember/object';
 import { scheduleOnce, next } from '@ember/runloop';
 import { set } from '@ember/object';
 import { wrapper } from '../utils/proxy-unproxy-objects';
+import { tracked } from '@glimmer/tracking';
 
-export default Component.extend({
-  dragCoordinator: service('drag-coordinator'),
-  overrideClass: 'draggable-object',
-  classNameBindings: [':js-draggableObject','isDraggingObject:is-dragging-object:', 'overrideClass'],
-  attributeBindings: ['dragReady:draggable'],
-  isDraggable: true,
-  dragReady: true,
-  isSortable: false,
-  sortingScope: 'drag-objects',
-  title: alias('content.title'),
+export default class DraggableObject extends Component {
+  @service dragCoordinator
+
+  @tracked isDraggable = true
+  @tracked dragReady = true
+
+  @tracked isDraggingObject = false
+
+  get title() {
+    return this.args.content.title;
+  }
+
+  get isSortable() { 
+    return this.args.isSortable ?? false;
+  }
+
+  get sortingScope() {
+    return this.args.sortingScope ?? 'drag-objects';
+  }
 
   // idea taken from https://github.com/emberjs/rfcs/blob/master/text/0680-implicit-injection-deprecation.md#stage-1
   get coordinator() {
@@ -26,71 +35,72 @@ export default Component.extend({
     }
 
     return this._coordinator;
-  },
+  }
+
   set coordinator(value) {
     this._coordinator = value;
-  },
+  }
 
-  draggable: computed('isDraggable', function() {
-    let isDraggable = this.get('isDraggable');
+  get draggable() {
+    return this.args.isDraggable ?? true;
+  }
 
-    return isDraggable || null;
-  }),
+get proxyContent() {
+    return wrapper(this.args.content);
+  }
 
-  proxyContent: computed('content', function() {
-    return wrapper(this.get('content'));
-  }),
-
-
-  init() {
-    this._super(...arguments);
-    if (this.get('dragHandle')) {
-      this.set('dragReady', false);
+  constructor() {
+    super(...arguments);
+    if (this.args.dragHandle) {
+      this.dragReady = false;
     }
 
     this.mouseOverHandler = function() {
-      this.set('dragReady', true);
+      this.dragReady = true;
     }.bind(this);
     this.mouseOutHandler = function() {
-      this.set('dragReady', false);
+      this.dragReady = false;
     }.bind(this);
 
-  },
+  }
 
-  didInsertElement() {
+  @action
+  insert() {
     scheduleOnce('afterRender', () => {
       //if there is a drag handle watch the mouse up and down events to trigger if drag is allowed
-      let dragHandle = this.get('dragHandle');
+      let dragHandle = this.args.dragHandle;
       if (dragHandle) {
         //only start when drag handle is activated
-        if (this.element.querySelector(dragHandle)) {
-          this.element.querySelector(dragHandle).addEventListener('mouseover', this.mouseOverHandler);
-          this.element.querySelector(dragHandle).addEventListener('mouseout', this.mouseOutHandler);
+        if (document.querySelector(dragHandle)) {
+          document.querySelector(dragHandle).addEventListener('mouseover', this.mouseOverHandler);
+          document.querySelector(dragHandle).addEventListener('mouseout', this.mouseOutHandler);
         }
       }
     });
-  },
+  }
 
-  willDestroyElement(){
-    let dragHandle = this.get('dragHandle');
-    if (this.element.querySelector(dragHandle)) {
-      this.element.querySelector(dragHandle).removeEventListener('mouseover', this.mouseOverHandler);
-      this.element.querySelector(dragHandle).removeEventListener('mouseout', this.mouseOutHandler);
+  @action
+  destroy(){
+    let dragHandle = this.args.dragHandle;
+    if (document.querySelector(dragHandle)) {
+      document.querySelector(dragHandle).removeEventListener('mouseover', this.mouseOverHandler);
+      document.querySelector(dragHandle).removeEventListener('mouseout', this.mouseOutHandler);
     }
-  },
+  }
 
 
+  @action
   dragStart(event) {
-    if (!this.get('isDraggable') || !this.get('dragReady')) {
+    if (!this.isDraggable || !this.dragReady) {
       event.preventDefault();
       return;
     }
 
     let dataTransfer = event.dataTransfer;
 
-    let obj = this.get('proxyContent');
+    let obj = this.proxyContent;
     let id = null;
-    let coordinator = this.get('coordinator');
+    let coordinator = this.coordinator;
     if (coordinator) {
        id = coordinator.setObject(obj, { source: this });
     }
@@ -100,8 +110,8 @@ export default Component.extend({
     if (obj && typeof obj === 'object') {
       set(obj, 'isDraggingObject', true);
     }
-    this.set('isDraggingObject', true);
-    if (!this.get('dragCoordinator.enableSort') && this.get('dragCoordinator.sortComponentController')) {
+    this.isDraggingObject = true;
+    if (!this.dragCoordinator.enableSort && this.dragCoordinator.sortComponentController) {
       //disable drag if sorting is disabled this is not used for regular
       event.preventDefault();
       return;
@@ -109,70 +119,84 @@ export default Component.extend({
       next(()=> {
         this.dragStartHook(event);
       });
-      this.get('dragCoordinator').dragStarted(obj, event, this);
+      this.dragCoordinator.dragStarted(obj, event, this);
     }
 
-    if( this.get('dragStartAction')) {
-      this.get('dragStartAction')(obj, event);
+    if( this.args.dragStartAction) {
+      this.args.dragStartAction(obj, event);
     }
 
-    if (this.get('isSortable') && this.get('draggingSortItem')) {
-      this.get('draggingSortItem')(obj, event);
+    if (this.args.isSortable && this.draggingSortItem) {
+      this.draggingSortItem(obj, event);
     }
-  },
+  }
 
+  @action
   dragEnd(event) {
-    if (!this.get('isDraggingObject')) {
+    if (!this.isDraggingObject) {
       return;
     }
 
-    let obj = this.get('proxyContent');
+    let obj = this.proxyContent;
 
     if (obj && typeof obj === 'object') {
       set(obj, 'isDraggingObject', false);
     }
-    this.set('isDraggingObject', false);
+    this.isDraggingObject = false;
     this.dragEndHook(event);
-    this.get('dragCoordinator').dragEnded();
-    if(this.get('dragEndAction')) {
-      this.get('dragEndAction')(obj, event);
+    this.dragCoordinator.dragEnded();
+    if(this.args.dragEndAction) {
+      this.args.dragEndAction(obj, event);
     }
-    if (this.get('dragHandle')) {
-      this.set('dragReady', false);
+    if (this.args.dragHandle) {
+      this.dragReady = false;
     }
-  },
+  }
 
+  @action
   drag(event) {
-    if(this.get('dragMoveAction')) {
-      this.get('dragMoveAction')(event);
+    if(this.args.dragMoveAction) {
+      this.args.dragMoveAction(event);
     }
-  },
+  }
 
+  @action
   dragOver(event) {
-   if (this.get('isSortable')) {
-     this.get('dragCoordinator').draggingOver(event, this);
+
+   if (this.args.isSortable) {
+
+     this.dragCoordinator.draggingOver(event, this);
    }
     return false;
-  },
+  }
 
   dragStartHook(event) {
-    event.target.style.opacity = '0.5';
-  },
+    if(this.args.dragStartHook) {
+      this.args.dragStartHook(event);
+    } else {
+      event.target.style.opacity = '0.5';
+    }
+  }
 
   dragEndHook(event) {
-    event.target.style.opacity = '1';
-  },
+    if(this.args.dragEndHook) {
+      this.args.dragEndHook(event);
+    } else {
+      event.target.style.opacity = '1';
+    }
+  }
 
+  @action
   drop(event) {
     //Firefox is navigating to a url on drop, this prevents that from happening
     event.preventDefault();
-  },
-
-  actions: {
-    selectForDrag() {
-      let obj = this.get('proxyContent');
-      let hashId = this.get('coordinator').setObject(obj, { source: this });
-      this.set('coordinator.clickedId', hashId);
-    }
   }
-});
+
+  @action
+  selectForDrag() {
+    let obj = this.proxyContent;
+    let hashId = this.coordinator.setObject(obj, { source: this });
+    this.coordinator.clickedId = hashId;
+  }
+
+}
