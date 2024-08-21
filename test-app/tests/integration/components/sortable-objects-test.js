@@ -86,7 +86,7 @@ module('Integration | Component | sortable objects', function (hooks) {
     await render(hbs`
       <SortableObjects @sortableObjectList={{this.pojoData}} @sortEndAction={{this.sortEndAction}} class='sortContainer' @sortingScope='sortable-objects'>
         {{#each this.pojoData as |item|}}
-          <DraggableObject @content={{item}} @overrideClass='sortObject' @isSortable={{true}} @sortingScope='sortable-objects'>
+          <DraggableObject @content={{item}} class='sortObject' @isSortable={{true}} @sortingScope='sortable-objects'>
             {{item.title}}
           </DraggableObject>
         {{/each}}
@@ -145,7 +145,7 @@ module('Integration | Component | sortable objects', function (hooks) {
     await render(hbs`
       <SortableObjects @sortableObjectList={{this.pojoData}} @sortEndAction={{this.sortEndAction}} class='sortContainer' @useSwap={{false}}>
         {{#each this.pojoData as |item|}}
-          <DraggableObject @content={{item}} @overrideClass='sortObject' @isSortable={{true}}>
+          <DraggableObject @content={{item}} class='sortObject' @isSortable={{true}}>
             {{item.title}}
           </DraggableObject>
         {{/each}}
@@ -200,7 +200,7 @@ module('Integration | Component | sortable objects', function (hooks) {
     await render(hbs`
       <SortableObjects @sortableObjectList={{this.pojoData}} @sortEndAction={{this.sortEndAction}} class='sortContainer' @enableSort={{false}}>
       {{#each this.pojoData as |item|}}
-        <DraggableObject @content={{item}} @overrideClass='sortObject' @isSortable={{false}}>
+        <DraggableObject @content={{item}} class='sortObject' @isSortable={{false}}>
           {{item.title}}
         </DraggableObject>
         {{/each}}
@@ -252,7 +252,7 @@ module('Integration | Component | sortable objects', function (hooks) {
     await render(hbs`
       <SortableObjects @sortableObjectList={{this.pojoData}} @useSwap={{false}} @inPlace={{true}}>
         {{#each this.pojoData as |item|}}
-          <DraggableObject @content={{item}} @overrideClass='sortObject' @isSortable={{true}}>
+          <DraggableObject @content={{item}} class='sortObject' @isSortable={{true}}>
             {{item.title}}
           </DraggableObject>
         {{/each}}

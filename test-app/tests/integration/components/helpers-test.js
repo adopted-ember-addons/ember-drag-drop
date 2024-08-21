@@ -17,7 +17,7 @@ module('Integration | Helpers', function (hooks) {
         <div class="item">{{this.genre}}</div>
       </DraggableObject>
 
-      <DraggableObjectTarget class="drop-target {{genre}}" @action={{this.dropAction}} @destination={{index}} @coordinator={{this.coordinator}} />
+      <DraggableObjectTarget @overrideClass="drop-target {{genre}}" @action={{this.dropAction}} @destination={{index}} @coordinator={{this.coordinator}} />
     {{/each}}
   `;
 
