@@ -1,2 +1,12 @@
 {{! template-lint-disable no-yield-only }}
-{{yield}}
+<div 
+    class="sortable-objects"
+    {{did-insert this.initComp}}
+    {{will-destroy this.destroy}}
+    {{on 'dragstart' this.dragStart}}
+    {{on 'dragenter' this.dragEnter}}
+    {{on 'dragover' this.dragOver}}
+    {{on 'drop' this.drop}}
+    ...attributes>
+    {{yield}}
+</div>
