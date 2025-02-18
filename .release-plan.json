@@ -1,17 +1,17 @@
 {
   "solution": {
     "ember-drag-drop": {
-      "impact": "major",
-      "oldVersion": "0.9.0-beta.0",
-      "newVersion": "1.0.0",
+      "impact": "patch",
+      "oldVersion": "1.0.0",
+      "newVersion": "1.0.1",
       "constraints": [
         {
-          "impact": "major",
-          "reason": "Appears in changelog section :boom: Breaking Change"
+          "impact": "patch",
+          "reason": "Appears in changelog section :bug: Bug Fix"
         }
       ],
       "pkgJSONPath": "./ember-drag-drop/package.json"
     }
   },
-  "description": "## Release (2024-04-15)\n\nember-drag-drop 1.0.0 (major)\n\n#### :boom: Breaking Change\n* `ember-drag-drop`, `test-app`\n  * [#1](https://github.com/adopted-ember-addons/ember-drag-drop/pull/1) Convert to a v2 addon and drop support for Ember < 3.16 ([@mansona](https://github.com/mansona))\n\n#### :house: Internal\n* [#2](https://github.com/adopted-ember-addons/ember-drag-drop/pull/2) setup release-plan ([@mansona](https://github.com/mansona))\n\n#### Committers: 1\n- Chris Manson ([@mansona](https://github.com/mansona))\n"
+  "description": "## Release (2025-02-18)\n\nember-drag-drop 1.0.1 (patch)\n\n#### :bug: Bug Fix\n* `ember-drag-drop`\n  * [#10](https://github.com/adopted-ember-addons/ember-drag-drop/pull/10) use `.slice` when `.toArray` is not present ([@artemgurzhii](https://github.com/artemgurzhii))\n\n#### Committers: 1\n- Artem Hurzhii ([@artemgurzhii](https://github.com/artemgurzhii))\n"
 }
