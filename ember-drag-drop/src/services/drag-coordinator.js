@@ -138,7 +138,7 @@ export default Service.extend({
 
       let list = aSortable.get('sortableObjectList');
       if (!this.get('inPlace')) {
-        list = A(list.toArray());
+        list = A(list.toArray ? list.toArray() : list.slice());
       }
 
       if (this.get('useSwap')) {
