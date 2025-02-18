@@ -1,5 +1,16 @@
 # Changelog
 
+## Release (2025-02-18)
+
+ember-drag-drop 1.0.1 (patch)
+
+#### :bug: Bug Fix
+* `ember-drag-drop`
+  * [#10](https://github.com/adopted-ember-addons/ember-drag-drop/pull/10) use `.slice` when `.toArray` is not present ([@artemgurzhii](https://github.com/artemgurzhii))
+
+#### Committers: 1
+- Artem Hurzhii ([@artemgurzhii](https://github.com/artemgurzhii))
+
 ## Release (2024-04-15)
 
 ember-drag-drop 1.0.0 (major)
