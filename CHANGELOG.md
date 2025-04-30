@@ -1,5 +1,15 @@
 # Changelog
 
+## Release (2025-04-30)
+
+
+
+#### :memo: Documentation
+* [#13](https://github.com/adopted-ember-addons/ember-drag-drop/pull/13) README.md fix test helper import example ([@ZacharyMohler](https://github.com/ZacharyMohler))
+
+#### Committers: 1
+- Zachary Mohler ([@ZacharyMohler](https://github.com/ZacharyMohler))
+
 ## Release (2025-02-18)
 
 ember-drag-drop 1.0.1 (patch)

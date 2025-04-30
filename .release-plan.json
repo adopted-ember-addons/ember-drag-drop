@@ -1,17 +1,8 @@
 {
   "solution": {
     "ember-drag-drop": {
-      "impact": "patch",
-      "oldVersion": "1.0.0",
-      "newVersion": "1.0.1",
-      "constraints": [
-        {
-          "impact": "patch",
-          "reason": "Appears in changelog section :bug: Bug Fix"
-        }
-      ],
-      "pkgJSONPath": "./ember-drag-drop/package.json"
+      "oldVersion": "1.0.1"
     }
   },
-  "description": "## Release (2025-02-18)\n\nember-drag-drop 1.0.1 (patch)\n\n#### :bug: Bug Fix\n* `ember-drag-drop`\n  * [#10](https://github.com/adopted-ember-addons/ember-drag-drop/pull/10) use `.slice` when `.toArray` is not present ([@artemgurzhii](https://github.com/artemgurzhii))\n\n#### Committers: 1\n- Artem Hurzhii ([@artemgurzhii](https://github.com/artemgurzhii))\n"
+  "description": "## Release (2025-04-30)\n\n\n\n#### :memo: Documentation\n* [#13](https://github.com/adopted-ember-addons/ember-drag-drop/pull/13) README.md fix test helper import example ([@ZacharyMohler](https://github.com/ZacharyMohler))\n\n#### Committers: 1\n- Zachary Mohler ([@ZacharyMohler](https://github.com/ZacharyMohler))\n"
 }
