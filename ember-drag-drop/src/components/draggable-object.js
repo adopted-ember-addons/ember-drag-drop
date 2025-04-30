@@ -137,9 +137,10 @@ export default Component.extend({
     if(this.get('dragEndAction')) {
       this.get('dragEndAction')(obj, event);
     }
-    if (this.get('dragHandle')) {
-      this.set('dragReady', false);
-    }
+
+    // This prevents the situation where, when you release an element and the mouse cursor is still in the DOM
+    // that triggers the item's draggable state, you can move the item again without having to move the mouse out and back over the item.
+    this.set('dragReady', false);
   },
 
   drag(event) {
