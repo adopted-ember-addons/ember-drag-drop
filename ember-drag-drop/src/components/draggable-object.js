@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-actions-hash, ember/no-classic-classes, ember/no-classic-components, ember/no-component-lifecycle-hooks, ember/no-get, ember/no-incorrect-calls-with-inline-anonymous-functions, ember/require-super-in-lifecycle-hooks, ember/require-tagless-components, import/extensions, prettier/prettier */
 import { getOwner } from '@ember/application';
 import Component from '@ember/component';
-import { inject as service} from '@ember/service';
+import { service } from '@ember/service';
 import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { scheduleOnce, next } from '@ember/runloop';
